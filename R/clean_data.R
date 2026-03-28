@@ -1,5 +1,7 @@
-get_data <- function(file) {
-  read_csv(file)
+
+get_data <- function() {
+  url <- "https://ippsr.msu.edu/sites/default/files/cspp/correlates2-6.csv"
+  read_csv(url)
 }
 
 #' Select outcomes that can be used for gsynth
