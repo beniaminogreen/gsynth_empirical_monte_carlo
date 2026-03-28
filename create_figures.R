@@ -5,8 +5,7 @@ library(panelView)
 data <- targets::tar_read(datasets_with_sims)
 
 
-x <- data$small_data[[1]]
-
+#  This code saves out 6 example panels
 walk2(1:6, data$small_data[1:6], function(index, data) {
   panelview(outcome ~ 0, index = c("state", "year"), data = data, type = "outcome") 
   ggsave(str_glue("figures/time_series_{index}.png"))
@@ -14,10 +13,8 @@ walk2(1:6, data$small_data[1:6], function(index, data) {
 )
 
 
-data %>% 
-  unnest(sims) %>% 
-  names()
 
+#  Calculate all the statistics for coverage, ci width, bias across simulations
 df <- data %>% 
   unnest(sims) %>% 
   mutate( 
@@ -59,7 +56,6 @@ df %>%
   theme_bw()  +  
   scale_fill_manual(values = wes_palette("GrandBudapest2")) + 
   xlab("Outcome") + 
-  ylab("Estimated SE / True SE") +  
   labs(fill = "Method") + 
   coord_flip() + 
   ggtitle(
@@ -92,7 +88,7 @@ df %>%
   theme_bw()  +  
   scale_fill_manual(values = wes_palette("GrandBudapest2")) + 
   xlab("Outcome") + 
-  ylab("Coverage Rate") +  
+  ylab("Ci Width") +  
   labs(fill = "Method") + 
   coord_flip() + 
   ggtitle(
@@ -121,19 +117,18 @@ df %>%
     "Coverage Rate by Method", 
     subtitle = "GSC vs TWFE"
   )  
-
 ggsave("figures/coverage.png", width = 10)
 
-df %>% 
-  pivot_longer(cols = c(gsc_coverage, lm_coverage, em_gsc_coverage))   %>% 
-  mutate(
-    ci_lo = pmax(value - 2*sqrt(value * (1-value)/50),0),
-    ci_hi = pmin(value + 2*sqrt(value * (1-value)/50),1), 
-    compatible_with_coverage = ci_lo < .95 & ci_hi > .95,
-    compatible_with_conservative = ci_hi > .95
-  )  %>% 
-  summarize(
-    compatible = mean(compatible_with_coverage), 
-    cons = mean(compatible_with_conservative),
-    .by = name
-  )
+# df %>% 
+#   pivot_longer(cols = c(gsc_coverage, lm_coverage, em_gsc_coverage))   %>% 
+#   mutate(
+#     ci_lo = pmax(value - 2*sqrt(value * (1-value)/50),0),
+#     ci_hi = pmin(value + 2*sqrt(value * (1-value)/50),1), 
+#     compatible_with_coverage = ci_lo < .95 & ci_hi > .95,
+#     compatible_with_conservative = ci_hi > .95
+#   )  %>% 
+#   summarize(
+#     compatible = mean(compatible_with_coverage), 
+#     cons = mean(compatible_with_conservative),
+#     .by = name
+#   )
