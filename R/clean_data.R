@@ -1,6 +1,6 @@
 
 get_data <- function() {
-  url <- "https://ippsr.msu.edu/sites/default/files/cspp/correlates2-6.csv"
+  url <- "https://ippsr.msu.edu/sites/default/files/cspp/cspp_core_academic_2-6.csv"
   read_csv(url)
 }
 
