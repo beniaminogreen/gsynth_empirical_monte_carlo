@@ -6,12 +6,9 @@ get_data <- function() {
 
 #' Select outcomes that can be used for gsynth
 get_outcomes <- function(dataset) {
-  outcomes <- names(dataset)[-(1:50)]
-  outcomes <- dataset[,-(1:50)] %>% 
+  outcomes <- dataset %>% 
+    select(-year, -st, -stateno, -state, -state_fips, -state_icpsr) %>% 
     select(where(is.numeric)) %>% 
-    select(where(function(x){
-      mean(is.na(x)) < .8
-    })) %>% 
     names()
 
   return(outcomes)
@@ -53,6 +50,7 @@ create_datasets_df <- function(dataset, outcomes, max_time_periods = 20, min_tim
       mean_na < .02,
       n_distinct > 300
     )
+
   datasets <- datasets %>% 
     mutate(
       small_data = pmap(list(data, min_year, max_year), function(data, min_year, max_year) {

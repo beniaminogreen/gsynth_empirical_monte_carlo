@@ -1,7 +1,3 @@
-# data <- targets::tar_read(datasets)$small_data[[1]]
-# n_treated <- 5
-# n_treat_time_periods <- 8
-
 run_one_sim <- function(data, n_treated = 5, n_treat_time_periods = 8 ) {
   states <- unique(data$state)
   data$treat <- as.numeric(data$state %in% sample(states, n_treated) & max(data$year) - data$year < n_treat_time_periods)
@@ -36,7 +32,7 @@ run_one_sim <- function(data, n_treated = 5, n_treat_time_periods = 8 ) {
       rename_with(~ paste0("gsc_", tolower(.x)))
     gsc_df$gsc_r <- gsc_out$r.cv
 
-    bind_cols(lm_df, gsc_df, em_gsc_df)
+    bind_cols(lm_df, em_gsc_df, gsc_df)
   }, error = function(e) tibble())
 
   return(out)
