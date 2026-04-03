@@ -1,4 +1,6 @@
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(ggplot2)
 library(wesanderson)
 library(panelView)
 

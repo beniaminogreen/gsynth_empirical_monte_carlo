@@ -1,7 +1,7 @@
 library(targets)
 
 tar_source()
-tar_option_set(packages = c("tidyverse", "gsynth", "estimatr", "broom"))
+tar_option_set(packages = c("ggplot2", "dplyr", "tidyr", "gsynth", "estimatr", "broom"))
 
 set.seed(0)
 
