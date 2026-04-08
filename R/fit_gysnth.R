@@ -6,13 +6,13 @@ run_one_sim <- function(data, n_treated = 5, n_treat_time_periods = 8 ) {
     gsc_out <- gsynth(
       outcome ~ treat, data = data, index = c("state","year"),
       inference = "parametric", EM = FALSE, CV = TRUE, se = TRUE,
-      force = "two-way"
+      force = "two-way", cores = 20
     )
 
     em_gsc_out <- gsynth(
       outcome ~ treat, data = data, index = c("state","year"),
       inference = "parametric", EM = TRUE, CV = TRUE, se = TRUE,
-      force = "two-way"
+      force = "two-way", cores = 20
     )
 
     lm_rob_out <- lm_robust(
@@ -33,7 +33,7 @@ run_one_sim <- function(data, n_treated = 5, n_treat_time_periods = 8 ) {
     gsc_df$gsc_r <- gsc_out$r.cv
 
     bind_cols(lm_df, em_gsc_df, gsc_df)
-  }, error = function(e) tibble())
+  }, error = function(e) {tibble(err = list(e))})
 
   return(out)
 }
